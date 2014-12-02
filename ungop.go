@@ -1,6 +1,7 @@
 package main
 
 import "archive/zip"
+import "path"
 import "flag"
 import "fmt"
 import "io"
@@ -8,6 +9,27 @@ import "os"
 
 var listFlag = flag.Bool("l", false, "listing")
 var directory = flag.String("d", "", "expand directory")
+
+func deepMkdir(folder string) error {
+	finfo, err := os.Stat(folder)
+	if err == nil {
+		if finfo.IsDir() {
+			return nil
+		} else {
+			return fmt.Errorf("%s: Not Directory", folder)
+		}
+	} else {
+		parent := path.Dir(folder)
+		if err := deepMkdir(parent); err != nil {
+			return err
+		}
+		if _, err2 := os.Stat(folder); err2 != nil {
+			return os.Mkdir(folder, 0666)
+		} else {
+			return nil
+		}
+	}
+}
 
 func main() {
 	flag.Parse()
@@ -48,15 +70,24 @@ func main() {
 			fmt.Println(f.Name)
 			continue
 		}
+		if f.FileInfo().IsDir() {
+			if err := deepMkdir(f.Name); err != nil {
+				fmt.Fprintf(os.Stderr, "%s: %s\n", f.Name, err.Error())
+			}
+			fmt.Fprintln(os.Stdout, f.Name)
+			continue
+		}
 		zipFileReader, zipFileReaderErr := f.Open()
 		if zipFileReaderErr != nil {
 			fmt.Fprintf(os.Stderr, "%s: %s: %s\n",
 				zipFileName,
 				f.Name,
-				zipFileReaderErr.Error())
+				zipFileReaderErr.Error(),
+			)
 		} else {
-			unzipWriter, unzipWriterErr := os.Create(f.Name)
-			if unzipWriterErr != nil {
+			if err := deepMkdir(path.Dir(f.Name)); err != nil {
+				fmt.Fprintf(os.Stderr, "%s: %s\n", f.Name, err.Error())
+			} else if unzipWriter, unzipWriterErr := os.Create(f.Name); unzipWriterErr != nil {
 				fmt.Fprintf(os.Stderr, "%s: %s: %s\n",
 					zipFileName,
 					f.Name,
