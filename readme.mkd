@@ -1,0 +1,19 @@
+mdbminus
+========
+Tiny MDB interface for batchfile.
+
+    mdbminus MDB-FILENAME "SQL"
+
+pathcombine
+===========
+Print the path combined from arguments.
+
+    pathcombine path1 path2 ...
+
+ungop
+=====
+Tiny unzip support unicode-filename.
+
+vbcnt
+=====
+Count how many lines VB.Net sources have to make report to SIer!
