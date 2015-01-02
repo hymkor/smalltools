@@ -10,6 +10,18 @@ Print the path combined from arguments.
 
     pathcombine path1 path2 ...
 
+printrune
+=========
+Print unicode of arguments.
+
+    printrune STR
+
+stub
+====
+Print Arguments for Debug
+
+    stub ARG1...
+
 ungop
 =====
 Tiny unzip support unicode-filename.
