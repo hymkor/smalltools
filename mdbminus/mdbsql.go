@@ -9,8 +9,8 @@ import (
 )
 
 func mdbSql(db *sql.DB, sqlStr string, writer io.Writer) error {
-	fmt.Fprintln(writer, sqlStr)
-	if strings.HasPrefix(strings.TrimSpace(strings.ToLower(sqlStr)), "select") {
+	firstWord := strings.TrimSpace(strings.ToLower(sqlStr))
+	if strings.HasPrefix(firstWord, "select") {
 		rows, err := db.Query(sqlStr)
 		if err != nil {
 			return err
