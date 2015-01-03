@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
-	"strings"
 
 	_ "github.com/mattn/go-adodb"
 )
@@ -25,48 +24,7 @@ func main() {
 		return
 	}
 	defer db.Close()
-	fmt.Println(os.Args[2])
-	if strings.HasPrefix(strings.ToLower(os.Args[2]), "select") {
-		rows, err := db.Query(os.Args[2])
-		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			return
-		}
-		defer rows.Close()
-		cols, err := rows.Columns()
-		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			return
-		}
-		values := make([]interface{}, len(cols), len(cols))
-		pValues := make([]interface{}, len(cols), len(cols))
-		for i := 0; i < len(cols); i++ {
-			if i > 0 {
-				fmt.Print(",")
-			}
-			fmt.Print(cols[i])
-			pValues[i] = &values[i]
-		}
-		fmt.Println()
-		for rows.Next() {
-			if err := rows.Scan(pValues...); err != nil {
-				fmt.Fprintln(os.Stderr, err)
-				return
-			}
-			for i, cell := range values {
-				if i > 0 {
-					fmt.Print(",")
-				}
-				fmt.Printf("%v", cell)
-			}
-			fmt.Println()
-		}
-	} else {
-		_, resultErr := db.Exec(os.Args[2])
-		if resultErr != nil {
-			fmt.Fprintf(os.Stderr, "%s: %s\n", os.Args[2], resultErr.Error())
-			return
-		}
-		fmt.Println("done")
+	if err := mdbSql(db, os.Args[2], os.Stdout); err != nil {
+		fmt.Fprintln(os.Stderr, err.Error())
 	}
 }
