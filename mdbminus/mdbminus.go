@@ -8,7 +8,7 @@ import (
 	"os"
 
 	_ "github.com/mattn/go-adodb"
-	// "github.com/zetamatta/nyagos/Src/conio"
+	"github.com/zetamatta/nyagos/Src/conio"
 )
 
 var optionE = flag.String("e", "", "SQL")
@@ -74,28 +74,14 @@ func main() {
 		useShell = true
 	}
 	if !useShell {
-		br := bufio.NewScanner(os.Stdin)
 		for {
-			fmt.Print("SQL> ")
-			if !br.Scan() {
+			text, result := conio.ReadLine(func() int {
+				fmt.Print("SQL> ")
+				return 5
+			})
+			if result == conio.ABORT {
 				break
 			}
-			text := br.Text()
-			if text == "exit" {
-				break
-			}
-			if text == "" {
-				continue
-			}
-			/*
-				text, result := conio.ReadLine(func()int{
-					fmt.Print("SQL> ")
-					return 5
-				})
-				if result == conio.ABORT {
-					break
-				}
-			*/
 			if err := mdbSql(db, text, os.Stdout); err != nil {
 				fmt.Fprintln(os.Stderr, err.Error())
 			}
