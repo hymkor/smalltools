@@ -76,10 +76,7 @@ func main() {
 	}
 	if !useShell {
 		for {
-			text, result := conio.ReadLine(func() int {
-				fmt.Print("SQL> ")
-				return 5
-			})
+			text, result := conio.ReadLinePromptStr("SQL> ")
 			if result == conio.ABORT {
 				break
 			}
