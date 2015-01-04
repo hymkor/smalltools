@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	_ "github.com/mattn/go-adodb"
-	"github.com/zetamatta/nyagos/Src/conio"
+	"github.com/zetamatta/nyagos/src/conio"
 )
 
 var optionE = flag.String("e", "", "SQL")
