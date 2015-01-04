@@ -4,8 +4,9 @@ import (
 	"database/sql"
 	"fmt"
 	"io"
-	"os"
 	"strings"
+
+	_ "github.com/mattn/go-adodb"
 )
 
 func mdbSql(db *sql.DB, sqlStr string, writer io.Writer) error {
@@ -43,7 +44,7 @@ func mdbSql(db *sql.DB, sqlStr string, writer io.Writer) error {
 			fmt.Fprintln(writer)
 		}
 	} else {
-		_, resultErr := db.Exec(os.Args[2])
+		_, resultErr := db.Exec(sqlStr)
 		if resultErr != nil {
 			return fmt.Errorf("%s: %s", sqlStr, resultErr)
 		}
