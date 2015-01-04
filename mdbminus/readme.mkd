@@ -1,0 +1,15 @@
+mdbminus
+========
+
+Execute sql as one-linear.
+
+    mdbminus -e "SQL" DATABASE.MDB 
+
+Execute sql(s) written on a file.
+
+    mdbminus -f SCRIPTFILE.SQL DATABASE.MDB 
+    mdbminus DATABASE.MDB SCRIPTFILE.SQL
+
+Interactive mode.
+
+    mdbminus DATABASE.MDB
