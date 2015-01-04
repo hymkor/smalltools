@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	_ "github.com/mattn/go-adodb"
 	"github.com/zetamatta/nyagos/Src/conio"
@@ -81,6 +82,10 @@ func main() {
 			})
 			if result == conio.ABORT {
 				break
+			}
+			text = strings.TrimSpace(text)
+			if text == "" {
+				continue
 			}
 			if err := mdbSql(db, text, os.Stdout); err != nil {
 				fmt.Fprintln(os.Stderr, err.Error())
