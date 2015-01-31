@@ -77,7 +77,7 @@ func main() {
 	if !useShell {
 		for {
 			text, result := conio.ReadLinePromptStr("SQL> ")
-			if result == conio.ABORT {
+			if !result {
 				break
 			}
 			text = strings.TrimSpace(text)
