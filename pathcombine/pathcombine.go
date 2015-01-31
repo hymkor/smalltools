@@ -2,8 +2,8 @@ package main
 
 import "fmt"
 import "os"
-import "path/filepath"
+import "github.com/zetamatta/nyagos/src/dos"
 
 func main(){
-	fmt.Println(filepath.Join(os.Args[1:]...))
+	fmt.Println(dos.Join(os.Args[1:]...))
 }
