@@ -58,13 +58,15 @@ func main() {
 	if len(*directory) > 0 {
 		os.Chdir(*directory)
 	}
-	files := map[string]bool{}
+	files := map[string]struct{}{}
 	for _, fname := range args[1:] {
-		files[fname] = true
+		files[fname] = struct{}{}
 	}
 	for _, f := range zipReader.File {
-		if len(files) > 0 && !files[f.Name] {
-			continue
+		if len(files) > 0 {
+			if _,ok := files[f.Name] ; ! ok {
+				continue
+			}
 		}
 		if *listFlag {
 			fmt.Println(f.Name)
