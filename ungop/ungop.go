@@ -67,7 +67,17 @@ func main() {
 			continue
 		}
 		if *listFlag {
-			fmt.Println(f.Name)
+			dos_dt := f.ModifiedDate
+			dos_year := (dos_dt >> 9)
+			dos_month := (dos_dt >> 5 ) & 0x0F
+			dos_day := (dos_dt & 0x1F)
+
+			fmt.Printf("%s (1980+%02d-%02d-%02d) %s\n",
+				f.ModTime(),
+				dos_year,
+				dos_month,
+				dos_day,
+				f.Name)
 			continue
 		}
 		if f.FileInfo().IsDir() {
