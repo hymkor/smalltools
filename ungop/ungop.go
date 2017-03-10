@@ -1,11 +1,16 @@
 package main
 
-import "archive/zip"
-import "path"
-import "flag"
-import "fmt"
-import "io"
-import "os"
+import (
+	"archive/zip"
+	"flag"
+	"fmt"
+	"io"
+	"os"
+	"path"
+	"unicode/utf8"
+
+	"github.com/zetamatta/go-mbcs"
+)
 
 var listFlag = flag.Bool("l", false, "listing")
 var directory = flag.String("d", "", "expand directory")
@@ -41,6 +46,7 @@ func main() {
 	for _, fname := range args[1:] {
 		files[fname] = struct{}{}
 	}
+	is_mbcs := false
 	for _, f := range zipReader.File {
 		if len(files) > 0 {
 			if _, ok := files[f.Name]; !ok {
@@ -56,12 +62,24 @@ func main() {
 			stamp := f.ModTime().Local()
 			stampStr := stamp.Format("Jan _2 2006 15:04:05")
 
+			var name string
+			if bname := []byte(f.Name); is_mbcs || utf8.Valid(bname) {
+				if name_, err := mbcs.AtoU(bname); err == nil {
+					name = name_
+					is_mbcs = true
+				} else {
+					name = f.Name
+				}
+			} else {
+				name = f.Name
+			}
+
 			fmt.Printf("%s (1980+%02d-%02d-%02d) %s\n",
 				stampStr,
 				dos_year,
 				dos_month,
 				dos_day,
-				f.Name)
+				name)
 			continue
 		}
 		if f.FileInfo().IsDir() {
