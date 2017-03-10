@@ -54,11 +54,6 @@ func main() {
 			}
 		}
 		if *listFlag {
-			dos_dt := f.ModifiedDate
-			dos_year := (dos_dt >> 9)
-			dos_month := (dos_dt >> 5) & 0x0F
-			dos_day := (dos_dt & 0x1F)
-
 			stamp := f.ModTime().Local()
 			stampStr := stamp.Format("Jan _2 2006 15:04:05")
 
@@ -74,12 +69,7 @@ func main() {
 				name = f.Name
 			}
 
-			fmt.Printf("%s (1980+%02d-%02d-%02d) %s\n",
-				stampStr,
-				dos_year,
-				dos_month,
-				dos_day,
-				name)
+			fmt.Printf("%s %s\n", stampStr, name)
 			continue
 		}
 		if f.FileInfo().IsDir() {
