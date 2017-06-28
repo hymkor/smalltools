@@ -58,14 +58,17 @@ func main() {
 			stampStr := stamp.Format("Jan _2 2006 15:04:05")
 
 			var name string
-			if bname := []byte(f.Name); is_mbcs || utf8.Valid(bname) {
+			if bname := []byte(f.Name); is_mbcs || !utf8.Valid(bname) {
 				if name_, err := mbcs.AtoU(bname); err == nil {
+					//println("[MBCS] noerr")
 					name = name_
 					is_mbcs = true
 				} else {
+					//println("[MBCS] "+err.Error())
 					name = f.Name
 				}
 			} else {
+				//println("[UTF8]")
 				name = f.Name
 			}
 
